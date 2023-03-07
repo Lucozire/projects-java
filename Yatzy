@@ -1,0 +1,407 @@
+import java.util.*;
+import java.util.Objects;
+
+public class Main {
+    public static int[] dice = new int[5];
+    public static int[] digits = new int[5];
+    public static Random random = new Random();
+    public static int[] formattedScore = new int[18];
+    public static Scanner Input = new Scanner(System.in);
+
+    public static boolean end;
+
+
+    public static boolean pairtaken;
+    public static boolean triplettaken;
+    public static boolean fourtaken;
+    public static boolean twopairstaken;
+    public static boolean yatzytaken;
+    public static boolean smallladdertaken;
+    public static boolean bigladdertaken;
+    public static boolean fullhousetaken;
+    public static boolean chancetaken;
+
+    public static boolean onestaken;
+    public static boolean twostaken;
+    public static boolean threestaken;
+    public static boolean fourstaken;
+    public static boolean fivestaken;
+    public static boolean sixthstaken;
+
+    public static int onesscore;
+    public static int twosscore;
+    public static int threesscore;
+    public static int foursscore;
+    public static int fivesscore;
+    public static int sixthsscore;
+
+    public static int pairscore;
+    public static int tripletscore;
+    public static int fourscore;
+    public static int twopairsscore;
+    public static int yatzyscore;
+    public static int smallladderscore;
+    public static int bigladderscore;
+    public static int fullhousescore;
+    public static int chancescore;
+
+    public static String yeast;
+
+    public static void main(String[] args) {
+
+        namai();
+        System.out.println(yeast);
+        System.out.println("Välkommen till yatzy. I denna versionen så kommer du få tärningarna som siffror. exempelvis: 1 2 5 4 2, för att rulla tärning 1 så skriv");
+        System.out.println("1");
+        System.out.println("Vill du rulla flera så skriver du:");
+        System.out.println("1245 (Ingen skillnad vilken ordning)");
+        System.out.println("Detta kommer rulla tärningar 1 ,2 ,4 och 5. Du har 2 försök sedan kommer du få välja var du ska sätta tärningen.");
+        System.out.println("Dessa är numererade från 1 till 15. skriv in respektive siffra så kommer poängen landa där.");
+        System.out.println("Spelet KOMMER stoppa dig ifall du försöker lägga den på ett redan occuperat ställe.");
+        System.out.println("Lycka till, min highscore är 212 försök att slå det!");
+
+
+        while (true){
+            Start();
+            while (!end){
+
+                //Main roll
+
+                startingRoll();
+                printDices();
+
+                for (int i = 0; i < 2; i++) {
+                    rerollDice();
+                    printDices();
+                }
+
+                //Sorting
+
+                Arrays.sort(dice);
+
+                //Checking time
+
+                checkForCombinations();
+
+                //selection time now
+
+                scoreSelection();
+
+                printScoreBoard();
+
+                gameEnder();
+            }
+        }
+    }
+    public static void printDices(){
+        System.out.println();
+        System.out.println(dice[0] +" "+ dice[1] +" "+ dice[2] +" "+ dice[3] +" "+ dice[4]);
+    }
+    public static void Start() {
+        pairtaken = false;
+        triplettaken = false;
+        fourtaken = false;
+        twopairstaken = false;
+        yatzytaken = false;
+        smallladdertaken = false;
+        bigladdertaken = false;
+        fullhousetaken = false;
+        chancetaken = false;
+
+        onestaken = false;
+        twostaken = false;
+        threestaken = false;
+        fourstaken = false;
+        fivestaken = false;
+        sixthstaken = false;
+
+        end = false;
+
+        pairscore = 0;
+        tripletscore = 0;
+        fourscore = 0;
+        twopairsscore = 0;
+        yatzyscore = 0;
+        smallladderscore = 0;
+        bigladderscore = 0;
+        fullhousescore = 0;
+        chancescore = 0;
+
+        onesscore = 0;
+        twosscore = 0;
+        threesscore = 0;
+        foursscore = 0;
+        fivesscore = 0;
+        sixthsscore = 0;
+
+    } //Put starting items here
+    public static void rerollDice(){
+        int number = Input.nextInt();
+        for(int i=0; i<5; i++)
+        {
+            int offset = 0;
+            digits[i]=number%10;
+            number=number/10;
+            if (digits[i] != 0){
+                if(digits[i] == digits[i-offset]  || digits[i] == digits[0]){
+                    reroll(digits[i]);
+                } else {
+                    System.out.print("null");
+                }
+            }
+            if(digits[i] == digits[0]){
+                offset = 1;
+            }
+        }
+    }
+    public static void reroll(int diceNumber){
+        diceNumber--;
+        dice[diceNumber] = random.nextInt(0,6)+1;
+    }
+    public static void startingRoll(){
+        int dicenumber = 1;
+
+        for (int a = 5; a > 0; a--){ //roll all dices
+            reroll(dicenumber);
+            dicenumber++;
+        }
+    }
+    public static void checkForCombinations(){
+
+        onesscore = 0;
+        twosscore = 0;
+        threesscore = 0;
+        foursscore = 0;
+        fivesscore = 0;
+        sixthsscore = 0;
+
+        pairscore = 0;
+        tripletscore = 0;
+        fourscore = 0;
+        twopairsscore = 0;
+        yatzyscore = 0;
+        smallladderscore = 0;
+        bigladderscore = 0;
+        fullhousescore = 0;
+        chancescore = 0;
+
+        System.out.println(Arrays.toString(dice));
+        for (int b = 0; b < 5; b++) {
+            int[] temporary = new int[6];
+            for (int i = 0; i < 5; i++) {
+                int x = i+1;
+                temporary[x] = dice[i];
+            }
+            temporary[0] = temporary[5];
+            System.arraycopy(temporary, 0, dice, 0, 5);
+
+            //System.out.println(Arrays.toString(dice)); FOR DEBUGGING
+
+            for (int i = 0; i < 6; i++) {
+                int number = i+1;
+                if(dice[0] == number && dice[1] == number){
+                    if (dice[0] + dice[1] > pairscore){
+                        pairscore = dice[0] + dice[1];
+                    }
+                }
+                if(dice[0] == number && dice[1] == number && dice[2] == number) {
+                    tripletscore = dice[0] + dice[1] + dice[2];
+                }
+                if(dice[0] == number && dice[1] == number && dice[2] == number && dice[3] == number){
+                    fourscore = dice[0] + dice[1] + dice[2] + dice[3];
+                }
+                if(dice[0] == number && dice[1] == number && dice[2] == dice[3]){
+                    twopairsscore = dice[0] + dice[1] + dice[2] + dice[3];
+                }
+                if(dice[0] == number && dice[1] == number && dice[2] == number && dice[3] == number && dice[4] == number){
+                    yatzyscore = 50;
+                }
+                if(dice[0] == 1 && dice[1] == 2 && dice[2] == 3 && dice[3] == 4 && dice[4] == 5){
+                    if (dice[0] + dice[1] + dice[2] + dice[3] + dice[4] > smallladderscore){
+                        smallladderscore = 15;
+                    }
+                }
+                if(dice[0] == 2 && dice[1] == 3 && dice[2] == 4 && dice[3] == 5 && dice[4] == 6){
+                    if (dice[0] + dice[1] + dice[2] + dice[3] + dice[4] > bigladderscore){
+                        bigladderscore = 20;
+                    }
+                }
+                if(dice[0] == number && dice[1] == number && dice[2] == dice[3] && dice[3] == dice[4]){
+                    fullhousescore = dice[0] + dice[1] + dice[2] + dice[3] + dice[4];
+                }
+            }
+        }
+        chancescore = dice[0] + dice[1] + dice[2] + dice[3] + dice[4];
+
+        for (int i = 0; i < 5; i++) {
+            if (dice[i] == 1){
+                onesscore = onesscore + 1;
+            }
+            if (dice[i] == 2){
+                twosscore = twosscore + 2;
+            }
+            if (dice[i] == 3){
+                threesscore = threesscore + 3;
+            }
+            if (dice[i] == 4){
+                foursscore = foursscore + 4;
+            }
+            if (dice[i] == 5){
+                fivesscore = fivesscore + 5;
+            }
+            if (dice[i] == 6){
+                sixthsscore = sixthsscore + 6;
+            }
+        }
+        /*System.out.println("PAIR " + pairscore);
+        System.out.println("TRIPLET "+ tripletscore);
+        System.out.println("FOUR OF A KIND " + fourscore);
+        System.out.println("TWO PAIRS " + twopairsscore);
+        System.out.println("Yatzy " + yatzyscore);
+        System.out.println("Small Ladder " + smallladderscore);
+        System.out.println("Big Ladder " + bigladderscore);
+        System.out.println("Full House " + fullhousescore);
+        System.out.println("Chance " + chancescore);
+
+
+
+        System.out.println(onesscore + " " +twosscore + " " +threesscore + " " +foursscore + " " +fivesscore + " " +sixthsscore);
+        */
+    }
+    public static void scoreSelection(){
+        String[] rolledtype = {"Ones","Twos","Threes","Fours","Fives","Sixths","Pairs","Two Pairs","Triplets","Four o' a kind","Full house","Small ladder","Big Ladder","Chans","Yatzy"};
+        for (int i = 0; i < 15; i++) {
+            System.out.format("%15d", i+1);
+        }
+        System.out.println();
+        for (int i = 0; i < 15; i++) {
+            System.out.format("%15S", rolledtype[i]);
+        }
+        boolean selected = false;
+        while (!selected){
+            System.out.println();
+
+            int systemInput = Input.nextInt();
+            if(systemInput == 1 && !onestaken){
+                formattedScore[0] = onesscore;
+                onestaken = true;
+                selected = true;
+            }
+            else if(systemInput == 2 && !twostaken){
+                formattedScore[1] = twosscore;
+                twostaken = true;
+                selected = true;
+            }
+            else if(systemInput == 3 && !threestaken){
+                formattedScore[2] = threesscore;
+                threestaken = true;
+                selected = true;
+            }
+            else if(systemInput == 4 && !fourstaken){
+                formattedScore[3] = foursscore;
+                fourstaken = true;
+                selected = true;
+            }
+            else if(systemInput == 5 && !fivestaken){
+                formattedScore[4] = fivesscore;
+                fivestaken = true;
+                selected = true;
+            }
+            else if(systemInput == 6 && !sixthstaken){
+                formattedScore[5] = sixthsscore;
+                sixthstaken = true;
+                selected = true;
+            }
+            else if(systemInput == 7 && !pairtaken){
+                formattedScore[8] = pairscore;
+                pairtaken = true;
+                selected = true;
+            }
+            else if(systemInput == 8 && !twopairstaken){
+                formattedScore[9] = twopairsscore;
+                twopairstaken = true;
+                selected = true;
+            }
+            else if(systemInput == 9 && !triplettaken){
+                formattedScore[10] = tripletscore;
+                triplettaken = true;
+                selected = true;
+            }
+            else if(systemInput == 10 && !fourtaken){
+                formattedScore[11] = fourscore;
+                fourtaken = true;
+                selected = true;
+            }
+            else if(systemInput == 11 && !fullhousetaken){
+                formattedScore[12] = fullhousescore;
+                fullhousetaken = true;
+                selected = true;
+            }
+            else if(systemInput == 12 && !smallladdertaken){
+                formattedScore[13] = smallladderscore;
+                smallladdertaken = true;
+                selected = true;
+            }
+            else if(systemInput == 13 && !bigladdertaken){
+                formattedScore[14] = bigladderscore;
+                bigladdertaken = true;
+                selected = true;
+            }
+            else if(systemInput == 14 && !chancetaken){
+                formattedScore[15] = chancescore;
+                chancetaken = true;
+                selected = true;
+            }
+            else if(systemInput == 15 && !yatzytaken){
+                formattedScore[16] = yatzyscore;
+                yatzytaken = true;
+                selected = true;
+            } else {
+                System.out.println("Already occupied");
+            }
+        }
+
+        formattedScore[6] = (formattedScore[0] +formattedScore[1] +formattedScore[2] +formattedScore[3] +formattedScore[4] + formattedScore[5]);
+
+        if((formattedScore[0] +formattedScore[1] +formattedScore[2] +formattedScore[3] +formattedScore[4] + formattedScore[5]) >= 63){
+            formattedScore[7] = 50;
+        }
+        int combined = 0;
+        for (int i = 0; i < 17; i++) {
+            if(i == 6){
+                i++;
+            }
+            combined = combined + formattedScore[i];
+            formattedScore[17] = combined;
+        }
+    }
+    public static void printScoreBoard(){
+        System.out.println();
+        String[] rolledtype = {"Ones","Twos","Threes","Fours","Fives","Sixths","Sum","Bonus (63)","Pairs","Two Pairs","Triplets","Four o' a kind","Full house","Small ladder","Big Ladder","Chans","Yatzy","Sum"};
+        for (int i = 0; i < 18; i++) {
+            System.out.format("%15S", rolledtype[i]);
+        }
+        System.out.println();
+        for (int i = 0; i < 18; i++) {
+            System.out.format("%15d", formattedScore[i]);
+        }
+    }
+    public static void gameEnder(){
+        if(onestaken && twostaken && threestaken && fourstaken && fivestaken && sixthstaken && pairtaken && twopairstaken && triplettaken && fourtaken && fullhousetaken && smallladdertaken && bigladdertaken && chancetaken && yatzytaken){
+            end = true;
+            System.out.println();
+            System.out.println();
+            System.out.println("Game over! Your score was " + formattedScore[17]);
+            System.out.println();
+            System.out.println("Starting over...");
+        } //jag är trött, klandra mig inte för att jag anvönder println istället för en tagg
+        if(!Objects.equals(yeast, "Av Lucas Lilja")){
+            end = true;
+        }
+    }
+    public static void namai(){
+        if(true){
+            yeast = "Av Lucas Lilja";
+        }
+    }
+}
