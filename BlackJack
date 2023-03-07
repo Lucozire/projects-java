@@ -1,0 +1,81 @@
+import java.util.Scanner;
+import java.util.*;
+
+public class Main {
+    public static void main(String[] args) {
+
+        //we starting the stuff here, simple blackjack. As a person who has never played it I had to look up a lot of stuff lol
+
+        String theNextCard;
+        String playAgain = "y";
+        String ctn = null;
+
+        int nextCard;
+        int card1;
+        int card2;
+        int dealerCard1;
+        int dealerCard2;
+        int cardTotal = 0;
+        int dTotal = 0;
+
+        //Dealer cards are the cards of the AI or "AI" the dealers cards
+
+        Scanner keyboard = new Scanner(System.in);
+
+        Random random = new Random();
+
+        // Gives 2 cards 2 the player (haha 2 cause you know too and two... LAUGH PLEASE ;-;)
+
+        while ("y".equals(playAgain)) { //I ended up not using this feature because I could never get it to work but the plan was to make you my g be able to play without having to rerun. But it was never meant to be
+            //that dealers card and after the players cards
+            dealerCard1 = random.nextInt(10) + 1;
+            dealerCard2 = random.nextInt(10) + 1;
+
+            card1 = random.nextInt(10) + 1;
+            card2 = random.nextInt(10) + 1;
+            cardTotal = card1 + card2; //The players totallll carrrrdssss
+
+            //calculates the dealers cards and then then shows one
+            dTotal = dealerCard1 + dealerCard2;
+            System.out.println("Dealer shows: " + dealerCard1);
+
+            //display players first two cards & card total
+            System.out.println("First Cards: " + card1 + ", " + card2);
+            System.out.println("Total: " + cardTotal);
+
+            System.out.println("Another Card (y/n)?: ");
+            theNextCard = keyboard.nextLine();
+
+            while ("y".equals(theNextCard)) { //actually the card game I hope I got it right
+                nextCard = random.nextInt(10) + 1;
+                cardTotal += nextCard;
+                System.out.println("Card: " + nextCard);
+                System.out.println("Total: " + cardTotal);
+
+                if (cardTotal > 21) { //I got so far to loose it all. Yeah if this goes off youve lost and it after exits the game
+                    System.out.println("You busted, Dealer wins");
+                    System.exit(0);
+                }
+
+                if (cardTotal < 21) //yeah its what it looks like, compares cardTotal with 21
+
+                    System.out.println("Another Card (y/n)?: ");
+                theNextCard = keyboard.nextLine();
+                if ("n".equals(theNextCard))
+                    System.out.println("Dealer had: " + dTotal);
+                System.out.println("You had: " + cardTotal);
+
+                while ("n".equals(theNextCard)) { //Hey youve won! So yeah this block when youve gotten lucky (or you are just skilled my g)
+                    if (dTotal < cardTotal && cardTotal < 21) {
+                        System.out.println("Yay you win!");
+                        System.exit(0);
+
+                        if (dTotal > cardTotal && dTotal < 21)
+                            System.out.println("You lose!");
+                        playAgain = keyboard.nextLine();
+                    }
+                }
+            }
+        }
+    }
+}
